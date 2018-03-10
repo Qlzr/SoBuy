@@ -1,0 +1,137 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>个人中心</title>
+
+		<link href="{% static 'search/css/amazeui.css' %}" rel="stylesheet" type="text/css" />
+		<link href="{% static 'search/css/admin.css' %}" rel="stylesheet" type="text/css" />
+		<link href="{% static 'search/css/demo.css' %}" rel="stylesheet" type="text/css" />
+		<link href="{% static 'search/css/seastyle.css' %}" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" href="{% static 'users/css/mobi.min.css' %}" type="text/css">
+    	<style>
+        .errorlist {
+            color: red;
+        	}
+    	</style>
+
+		<script type="text/javascript" src="{% static 'search/js/jquery-1.7.min.js' %}"></script>
+		<script type="text/javascript" src="{% static 'search/js/script.js' %}"></script>
+	</head>
+
+	<body>
+
+		<!--顶部导航条 -->
+		<div class="am-container header">
+			<ul class="message-r">
+				<div class="topMessage home">
+					<div class="menu-hd"><a href="{% url 'search:index' %}" class="h">首页</a></div>
+				</div>
+				{% if user.is_authenticated %}
+                    <div class="topMessage">
+                        <div class="menu-hd"><a href="{% url 'users:personal' %}">{{ user.username }}</a></div>
+                    </div>
+                    <div class="topMessage">
+                        <div class="menu-hd"><a href="{% url 'logout' %}">退出</a></div>
+                    </div>
+                {% else %}
+                    <div class="topMessage">
+                        <div class="menu-hd"><a href="{% url 'login' %}" class="h">请登录</a></div>
+                    </div>
+                    <div class="topMessage">
+                        <div class="menu-hd"><a href="{% url 'users:register' %}">注册</a></div>
+                    </div>
+                {% endif %}
+			</ul>
+		</div>
+
+			<!--悬浮搜索框-->
+
+			<div class="nav white">
+				<div class="logoBig">
+					<li><img src="{% static 'search/img/SoBuy.jpg' %}" /></li>
+				</div>
+
+				<div class="search-bar pr" style="font-size: 300%; color: red; text-align: center;">
+					<font>个人中心</font>
+				</div>
+			</div>
+
+			<hr style="height:5px;border:none;border-top:5px solid red;" />
+            <div class="search">
+			<div class="search-list">
+				<div class="am-g am-g-fixed">
+					<div class="am-u-sm-12 am-u-md-12">
+						<div class="search-content">
+							<div class="sort">
+								<li class="first"><a title="个人资料" href="{% url 'users:personal' %}">个人资料</a></li>
+								<li><a title="收藏夹" href="#">收藏夹</a></li>
+								<li><a title="修改密码" href="{% url 'password_change' %}">修改密码</a></li>
+								<li><a title="重置密码" href="#">重置密码</a></li>
+							</div>
+							{% if user.is_authenticated %}
+							<!--个人信息 -->
+							<div class="info-main">
+									<div class="am-form-group">
+										<label style="font-size: 18px">&nbsp;&nbsp;用户名：</label>
+										<div class="am-form-content">
+											<font style="font-size: 16px">&nbsp;&nbsp;&nbsp;&nbsp;{{ user.username }}</font>
+										</div>
+									</div>
+
+									<div class="am-form-group">
+										<label style="font-size: 18px">&nbsp;&nbsp;昵称：</label>
+										<div class="am-form-content">
+											<font style="font-size: 16px">&nbsp;&nbsp;&nbsp;&nbsp;{{ user.nickname }}</font>
+										</div>
+									</div>
+
+									<div class="am-form-group">
+										<label style="font-size: 18px">&nbsp;&nbsp;邮箱：</label>
+										<div class="am-form-content">
+											<font style="font-size: 16px">&nbsp;&nbsp;&nbsp;&nbsp;{{ user.email }}</font>
+										</div>
+									</div>
+
+									<div class="am-form-group">
+										<label style="font-size: 18px">&nbsp;&nbsp;上次登录时间：</label>
+										<div class="am-form-content">
+											<font style="font-size: 16px">&nbsp;&nbsp;&nbsp;&nbsp;{{ user.last_login }}</font>
+										</div>
+									</div>
+
+									<div class="am-form-group">
+										<label style="font-size: 18px">&nbsp;&nbsp;注册时间：</label>
+										<div class="am-form-content">
+											<font style="font-size: 16px">&nbsp;&nbsp;&nbsp;&nbsp;{{ user.date_joined }}</font>
+										</div>
+									</div>
+								
+							</div>
+                            {% else %}
+                            <div style="text-align: center;">
+                            	<font>您还没有登录，请先</font>
+                            	<a href="{% url 'login' %}">登录</a>
+                            </div>
+                            {% endif %}
+						</div>
+					</div>
+				</div>
+			</div>
+
+			</div>
+
+		<script>
+			window.jQuery || document.write('<script src="basic/js/jquery-1.9.min.js"><\/script>');
+		</script>
+		<script type="text/javascript" src="{% static 'search/js/quick_links.js' %}"></script>
+
+<div class="theme-popover-mask"></div>
+
+	</body>
+
+</html>
