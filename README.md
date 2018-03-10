@@ -3,5 +3,8 @@
 
 demo效果
 
+首页
 ![Image text](https://github.com/Qlzr/Img/blob/master/sobuy/sobuy_index.jpg)
+
+商品展示页
 ![Image text](https://github.com/Qlzr/Img/blob/master/sobuy/sobuy_search.jpg)
