@@ -12,9 +12,9 @@ def index(request):
 	return render(request, 'search/index.html', context=context)
 
 def search_commodity(request):
+	user = request.GET.get('user', '')
 	if request.method == 'POST':
 		form = KeywordForm(request.POST)
-		user = request.POST.get('user', '')
 
 		# 检查表单数据的合法性
 		if form.is_valid():
