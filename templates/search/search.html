@@ -118,7 +118,7 @@
 											</p>
 											{% if user.is_authenticated %}
 											<p class="price fl">
-												<a href="#" style="font-weight: normal;">加入收藏</a>
+												<a href="{% url 'users:collect_commodity' %}?user={{ user.username }}&name={{ com.name }}&price={{ com.price }}&detail_url={{ com.detail_url }}&img_url={{ com.img_url }}&website={{ com.website }}" style="font-weight: normal;">加入收藏</a>
 											</p>
 											{% endif %}
 										</div>

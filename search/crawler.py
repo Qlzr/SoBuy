@@ -85,14 +85,7 @@ def get_dd(keyword, page):
 				com_info['img_url'] = img_attrs['data-original']
 			else:
 				com_info['img_url'] = img_attrs['src']
-			if com.find(dd_name='单品店铺'):
-				com_info['store'] = com.find(dd_name='单品店铺').get_text()
-				com_info['store_url'] = com.find(dd_name='单品店铺').attrs['href']
-			else:
-				com_info['store'] = "当当自营"
-				com_info['store_url'] = 'http://www.dangdang.com/'
 			com_info['website'] = '当当'
-			com_info['sort_type'] = '综合'
 			commodity_info.append(com_info)
 		return commodity_info
 	except:

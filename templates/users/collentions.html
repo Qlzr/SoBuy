@@ -13,11 +13,6 @@
 		<link href="{% static 'search/css/demo.css' %}" rel="stylesheet" type="text/css" />
 		<link href="{% static 'search/css/seastyle.css' %}" rel="stylesheet" type="text/css" />
 		<link rel="stylesheet" href="{% static 'users/css/mobi.min.css' %}" type="text/css">
-    	<style>
-        .errorlist {
-            color: red;
-        	}
-    	</style>
 
 		<script type="text/javascript" src="{% static 'search/js/jquery-1.7.min.js' %}"></script>
 		<script type="text/javascript" src="{% static 'search/js/script.js' %}"></script>
@@ -69,56 +64,52 @@
 						<div class="search-content">
 							<div class="sort">
 								{% if user.is_authenticated %}
-								<li class="first"><a title="个人资料" href="{% url 'users:personal' %}">个人资料</a></li>
-								<li><a title="收藏夹" href="{% url 'users:collentions' user.username %}">收藏夹</a></li>
+								<li><a title="个人资料" href="{% url 'users:personal' %}">个人资料</a></li>
+								<li class="first"><a title="收藏夹" href="{% url 'users:collentions' user.username %}">收藏夹</a></li>
 								<li><a title="修改密码" href="{% url 'password_change' %}">修改密码</a></li>
 								<li><a title="重置密码" href="#">重置密码</a></li>
 								{% else %}
-								<li class="first"><a title="个人资料" href="{% url 'users:personal' %}">个人资料</a></li>
-								<li><a title="收藏夹" href="#">收藏夹</a></li>
+								<li><a title="个人资料" href="{% url 'users:personal' %}">个人资料</a></li>
+								<li class="first"><a title="收藏夹" href="#">收藏夹</a></li>
 								<li><a title="修改密码" href="#">修改密码</a></li>
 								<li><a title="重置密码" href="#">重置密码</a></li>
 								{% endif %}
 							</div>
 							{% if user.is_authenticated %}
-							<!--个人信息 -->
-							<div class="info-main">
-									<div class="am-form-group">
-										<label style="font-size: 18px">&nbsp;&nbsp;用户名：</label>
-										<div class="am-form-content">
-											<font style="font-size: 16px">&nbsp;&nbsp;&nbsp;&nbsp;{{ user.username }}</font>
+							{% if collect_empty %}
+								<div style="text-align: center;font-size: 18px;">
+									<span>
+										您还没有收藏任何商品！
+									</span>
+								</div>
+								{% else %}
+								<ul class="am-avg-sm-2 am-avg-md-3 am-avg-lg-5 boxes">
+									{% for com in collentions %}
+									<li>
+										<div class="i-pic limit">
+											<a href="{{ com.detail_url }}" target="_blank">
+												<img src="{{ com.img_url }}" />
+											</a>
+											<a href="{{ com.detail_url }}" target="_blank">	
+												<p class="title fl">{{ com.name }}</p>
+											</a>
+											<p class="price fl">
+												<b>¥</b>
+												<strong>{{ com.price }}</strong>
+											</p>
+											<p class="number fl">
+												来自<span>{{ com.website }}</span>
+											</p>
+											
+											<p class="price fl">
+												<a href="#" style="font-weight: normal;">移除</a>
+											</p>
+											
 										</div>
-									</div>
-
-									<div class="am-form-group">
-										<label style="font-size: 18px">&nbsp;&nbsp;昵称：</label>
-										<div class="am-form-content">
-											<font style="font-size: 16px">&nbsp;&nbsp;&nbsp;&nbsp;{{ user.nickname }}</font>
-										</div>
-									</div>
-
-									<div class="am-form-group">
-										<label style="font-size: 18px">&nbsp;&nbsp;邮箱：</label>
-										<div class="am-form-content">
-											<font style="font-size: 16px">&nbsp;&nbsp;&nbsp;&nbsp;{{ user.email }}</font>
-										</div>
-									</div>
-
-									<div class="am-form-group">
-										<label style="font-size: 18px">&nbsp;&nbsp;上次登录时间：</label>
-										<div class="am-form-content">
-											<font style="font-size: 16px">&nbsp;&nbsp;&nbsp;&nbsp;{{ user.last_login }}</font>
-										</div>
-									</div>
-
-									<div class="am-form-group">
-										<label style="font-size: 18px">&nbsp;&nbsp;注册时间：</label>
-										<div class="am-form-content">
-											<font style="font-size: 16px">&nbsp;&nbsp;&nbsp;&nbsp;{{ user.date_joined }}</font>
-										</div>
-									</div>
-								
-							</div>
+									</li>
+									{% endfor %}
+								</ul>
+								{% endif %}
                             {% else %}
                             <div style="text-align: center;">
                             	<font>您还没有登录，请先</font>

@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import RegisterForm, UserForm
-from .models import User
+from .models import User, Collention
 import pymysql
+from django.utils import timezone
+
 # Create your views here.
 def register(request):
 
@@ -29,3 +31,25 @@ def register(request):
 
 def personal(request):
 	return render(request, 'users/personal.html')
+
+#收藏商品功能
+def collect_commodity(request):
+	collect = Collention.objects.create(
+		user = request.GET.get('user', ''), 
+		name = request.GET.get('name', ''),
+		price = request.GET.get('price', ''),
+		detail_url = request.GET.get('detail_url', ''),
+		img_url = request.GET.get('img_url', ''),
+		website = request.GET.get('website', ''),
+		collect_time = timezone.now())
+	collect.save()
+	return render(request, 'users/collect_success.html')
+
+def collentions(request, user):
+	collentions = Collention.objects.filter(user=user)
+	if len(collentions) == 0:
+		collect_empty = True
+	else:
+		collect_empty = False
+	context = {'collentions': collentions, 'collect_empty': collect_empty}
+	return render(request, 'users/collentions.html', context=context)

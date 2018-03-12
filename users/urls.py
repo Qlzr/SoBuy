@@ -5,4 +5,6 @@ app_name = 'users'
 urlpatterns = [
 	url(r'^register/$', views.register, name='register'),
 	url(r'^personal/$', views.personal, name='personal'),
+	url(r'^collect_commodity/$', views.collect_commodity, name='collect_commodity'),
+	url(r'^(?P<user>.+)/collentions/$', views.collentions, name='collentions'),
 ]

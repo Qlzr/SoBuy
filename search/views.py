@@ -2,15 +2,16 @@ from django.shortcuts import render
 from .form import KeywordForm
 from django.utils import timezone
 from .crawler import get_all_com, first_get_com
-from .models import Commodity
 from django.http import HttpResponse
 
+#获取首页
 def index(request):
 	form = KeywordForm()
 	username = request.COOKIES.get('cookie_username', '')
 	context = {'form': form, 'username': username}
 	return render(request, 'search/index.html', context=context)
 
+#根据关键词搜索商品
 def search_commodity(request):
 	user = request.GET.get('user', '')
 	if request.method == 'POST':
@@ -51,6 +52,8 @@ def search_commodity(request):
 	else:
 		return render(request, 'search/formerror.html')
 
+
+#翻页功能
 def search_page(request, keyword, page):
 	page_count = int(request.GET.get('page_count', ''))
 	jd_page_count = int(request.GET.get('jd_page_count', ''))
