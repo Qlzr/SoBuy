@@ -7,12 +7,12 @@
 <body>
 <div style="width: 1200px; margin: auto;">	
 	<div style="text-align: left;">
-		<span><a href="{% url 'search:index' %}">首页</a></span>
+		<span></span>
 		<span><a href="{% url 'login' %}">登录</a></span>
 		<span><a href="{% url 'users:register' %}">注册</a></span>
 	</div>
 	<div>
-		<h1>表单信息错误，请返回首页重新输入</h1>
+		<h1>表单信息错误，请返回<a href="{% url 'search:index' %}">首页</a>重新输入</h1>
 	</div>
 </div>
 </body>

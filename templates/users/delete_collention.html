@@ -5,6 +5,9 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		{% if user.is_authenticated %}
+		<meta http-equiv="refresh" content="3;URL={% url 'users:collentions' user.username %}">
+		{% endif %}
 
 		<title>个人中心</title>
 
@@ -73,8 +76,10 @@
 							
 							<div style="text-align: center;font-size: 18px;">
 									<span>
-										商品收藏成功!
-										<a href="{% url 'users:collentions' user.username %}" style="color: red;">返回收藏夹</a>
+										收藏移除成功!
+										<br/>
+										3秒钟后跳转到收藏夹！或
+										<a href="{% url 'users:collentions' user.username %}" style="color: red;">立即返回</a>
 										查看收藏的商品信息！
 									</span>
 								</div>

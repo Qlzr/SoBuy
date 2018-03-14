@@ -16,10 +16,7 @@
 		.message-r a {
 			color:#267fd9;
 		}
-	</style>
-
-		<script type="text/javascript" src="{% static 'search/js/jquery-1.7.min.js' %}"></script>
-		<script type="text/javascript" src="{% static 'search/js/script.js' %}"></script>
+		</style>
 	</head>
 
 	<body>
@@ -32,13 +29,13 @@
 				</div>
 				{% if user.is_authenticated %}
 					<div class="topMessage">
-						<div class="menu-hd"><a href="{% url 'users:personal' %}?user={{ user.username }}">{{ user.username }}</a></div>
+						<div class="menu-hd"><a href="{% url 'users:personal' %}">{{ user.username }}</a></div>
 					</div>
 					<div class="topMessage">
-						<div class="menu-hd"><a href="{% url 'users:personal' %}?user={{ user.username }}" target="_top">个人中心</a></div>
+						<div class="menu-hd"><a href="{% url 'users:personal' %}" target="_top">个人中心</a></div>
 					</div>
 					<div class="topMessage">
-						<div class="menu-hd"><a href="#" target="_top"><span>收藏夹</span></a></div>
+						<div class="menu-hd"><a href="{% url 'users:collentions' user.username %}" target="_top"><span>收藏夹</span></a></div>
 					</div>
 					<div class="topMessage">
 						<div class="menu-hd"><a href="{% url 'logout' %}">退出</a></div>
@@ -84,7 +81,7 @@
 						<div class="am-u-sm-12 am-u-md-12">
 							<div class="search-content">
 								<div class="sort">
-									<li class="first"><a title="综合" href="#">综合排序</a></li>
+									<li class="first"><a title="综合" href="{% url 'search:search_page' keyword 1 %}?page_count={{ page_count }}&jd_page_count={{ jd_page_count }}&dd_page_count={{ dd_page_count }}">综合排序</a></li>
 									<li><a title="销量" href="#">销量排序</a></li>
 									<li><a title="价格" href="#">价格优先</a></li>
 									<li><a title="评价" href="#">评价优先</a></li>
@@ -183,14 +180,6 @@
 				</div>
 
 			</div>
-
-		<script>
-			window.jQuery || document.write('<script src="basic/js/jquery-1.9.min.js"><\/script>');
-		</script>
-		<script type="text/javascript" src="{% static 'search/js/quick_links.js' %}"></script>
-
-<div class="theme-popover-mask"></div>
-
 	</body>
 
 </html>

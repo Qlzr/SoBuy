@@ -131,3 +131,12 @@ AUTH_USER_MODEL = 'users.User'
 #设置没有next值时的用户跳转
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_REDIRECT_URL = '/'
+
+#邮件发送设置
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_SSL = True
+EMAIL_HOST = 'smtp.qq.com'  # 邮件服务器
+EMAIL_PORT = 465   #端口号
+EMAIL_HOST_USER = '850048573@qq.com' # 帐号
+EMAIL_HOST_PASSWORD = 'iplrlnpcouedbcaf'  # 授权码
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

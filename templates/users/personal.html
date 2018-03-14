@@ -12,15 +12,11 @@
 		<link href="{% static 'search/css/admin.css' %}" rel="stylesheet" type="text/css" />
 		<link href="{% static 'search/css/demo.css' %}" rel="stylesheet" type="text/css" />
 		<link href="{% static 'search/css/seastyle.css' %}" rel="stylesheet" type="text/css" />
-		<link rel="stylesheet" href="{% static 'users/css/mobi.min.css' %}" type="text/css">
-    	<style>
-        .errorlist {
-            color: red;
-        	}
-    	</style>
-
-		<script type="text/javascript" src="{% static 'search/js/jquery-1.7.min.js' %}"></script>
-		<script type="text/javascript" src="{% static 'search/js/script.js' %}"></script>
+		<link rel="stylesheet" href="{% static 'users/css/mobi.min.css' %}">
+		<style>
+		.am-form-group label {font-size: 18px; font-weight: bold;}
+		.am-form-content {font-size: 16px;}
+		</style>
 	</head>
 
 	<body>
@@ -68,57 +64,65 @@
 					<div class="am-u-sm-12 am-u-md-12">
 						<div class="search-content">
 							<div class="sort">
-								{% if user.is_authenticated %}
 								<li class="first"><a title="个人资料" href="{% url 'users:personal' %}">个人资料</a></li>
-								<li><a title="收藏夹" href="{% url 'users:collentions' user.username %}">收藏夹</a></li>
-								<li><a title="修改密码" href="{% url 'password_change' %}">修改密码</a></li>
-								<li><a title="重置密码" href="#">重置密码</a></li>
-								{% else %}
-								<li class="first"><a title="个人资料" href="{% url 'users:personal' %}">个人资料</a></li>
-								<li><a title="收藏夹" href="#">收藏夹</a></li>
-								<li><a title="修改密码" href="#">修改密码</a></li>
-								<li><a title="重置密码" href="#">重置密码</a></li>
-								{% endif %}
+
+                                {% if user.is_authenticated %}
+                                <li><a title="收藏夹" href="{% url 'users:collentions' user.username %}">收藏夹</a></li>
+                                <li><a title="修改密码" href="{% url 'password_change' %}">修改密码</a></li>
+
+                                {% else %}
+                                <li><a title="收藏夹" href="#">收藏夹</a></li>
+                                <li><a title="修改密码" href="#">修改密码</a></li>
+                                
+                                {% endif %}
+                                
+                                <li><a title="重置密码" href="{% url 'password_reset' %}">重置密码</a></li>
 							</div>
 							{% if user.is_authenticated %}
-							<!--个人信息 -->
-							<div class="info-main">
-									<div class="am-form-group">
-										<label style="font-size: 18px">&nbsp;&nbsp;用户名：</label>
-										<div class="am-form-content">
-											<font style="font-size: 16px">&nbsp;&nbsp;&nbsp;&nbsp;{{ user.username }}</font>
-										</div>
-									</div>
+							    <div class="flex-center">
+                                    <div class="container">
+                                        <div class="flex-center">
+                                            <div class="unit-1-2 unit-1-on-mobile">
+                                                <form class="form" action="#" method="post">
+                                                    <div class="am-form-group">
+														<label>用户名：</label>
+														<div class="am-form-content">
+															<font style="font-size: 16px">{{ user.username }}</font>
+														</div>
+													</div>
 
-									<div class="am-form-group">
-										<label style="font-size: 18px">&nbsp;&nbsp;昵称：</label>
-										<div class="am-form-content">
-											<font style="font-size: 16px">&nbsp;&nbsp;&nbsp;&nbsp;{{ user.nickname }}</font>
-										</div>
-									</div>
+													<div class="am-form-group">
+														<label>昵称：</label>
+														<div class="am-form-content">
+															<font>{{ user.nickname }}</font>
+														</div>
+													</div>
 
-									<div class="am-form-group">
-										<label style="font-size: 18px">&nbsp;&nbsp;邮箱：</label>
-										<div class="am-form-content">
-											<font style="font-size: 16px">&nbsp;&nbsp;&nbsp;&nbsp;{{ user.email }}</font>
-										</div>
-									</div>
+													<div class="am-form-group">
+														<label>邮箱：</label>
+														<div class="am-form-content">
+															<font>{{ user.email }}</font>
+														</div>
+													</div>
 
-									<div class="am-form-group">
-										<label style="font-size: 18px">&nbsp;&nbsp;上次登录时间：</label>
-										<div class="am-form-content">
-											<font style="font-size: 16px">&nbsp;&nbsp;&nbsp;&nbsp;{{ user.last_login }}</font>
-										</div>
-									</div>
+													<div class="am-form-group">
+														<label>上次登录时间：</label>
+														<div class="am-form-content">
+															<font>{{ user.last_login }}</font>
+														</div>
+													</div>
 
-									<div class="am-form-group">
-										<label style="font-size: 18px">&nbsp;&nbsp;注册时间：</label>
-										<div class="am-form-content">
-											<font style="font-size: 16px">&nbsp;&nbsp;&nbsp;&nbsp;{{ user.date_joined }}</font>
-										</div>
-									</div>
-								
-							</div>
+													<div class="am-form-group">
+														<label>注册时间：</label>
+														<div class="am-form-content">
+															<font>{{ user.date_joined }}</font>
+														</div>
+													</div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             {% else %}
                             <div style="text-align: center;">
                             	<font>您还没有登录，请先</font>
@@ -131,14 +135,6 @@
 			</div>
 
 			</div>
-
-		<script>
-			window.jQuery || document.write('<script src="basic/js/jquery-1.9.min.js"><\/script>');
-		</script>
-		<script type="text/javascript" src="{% static 'search/js/quick_links.js' %}"></script>
-
-<div class="theme-popover-mask"></div>
-
 	</body>
 
 </html>

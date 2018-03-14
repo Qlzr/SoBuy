@@ -2,6 +2,8 @@ import requests
 import urllib
 from bs4 import BeautifulSoup
 import random
+import threading
+
 
 #汇总爬取到的商品信息
 def get_all_com(keyword, page, page_count, jd_page_count, dd_page_count):
@@ -41,19 +43,7 @@ def get_jd(keyword, page):
 		html = r.text
 		soup = BeautifulSoup(html, 'lxml')
 		commodity_list = soup.find_all(name='li',class_='gl-item')
-		com_list = []
-		for com in commodity_list:
-			com_info = {}
-			com_info['name'] = com.find(class_='p-name').a.em.get_text().strip()
-			com_info['price'] = com.find(class_='p-price').find(name='i').get_text()
-			img_attrs = com.find(name='img', class_='err-product').attrs
-			if 'data-lazy-img' in img_attrs:
-				com_info['img_url'] = 'http:' + img_attrs['data-lazy-img']
-			else:
-				com_info['img_url'] = 'http:' + img_attrs['src']
-			com_info['detail_url'] = 'https:' + com.find(class_='p-name').a.attrs['href'].replace('https://', '//')
-			com_info['website'] = '京东'
-			com_list.append(com_info)
+		com_list = resolve_jd(commodity_list)
 		return com_list
 	except:
 		return []
@@ -91,6 +81,8 @@ def get_dd(keyword, page):
 	except:
 		return []
 
+
+
 #首次请求
 def first_get_com(keyword):
 	com_list_jd,jd_page_count = first_get_jd(keyword)
@@ -117,19 +109,7 @@ def first_get_jd(keyword):
 	jd_page_count = soup.find(class_='fp-text').i.get_text()
 	jd_page_count = int(jd_page_count) * 2
 	commodity_list = soup.find_all(name='li',class_='gl-item')
-	com_list = []
-	for com in commodity_list:
-		com_info = {}
-		com_info['name'] = com.find(class_='p-name').a.em.get_text().strip()
-		com_info['price'] = com.find(class_='p-price').find(name='i').get_text()
-		img_attrs = com.find(name='img', class_='err-product').attrs
-		if 'data-lazy-img' in img_attrs:
-			com_info['img_url'] = 'http:' + img_attrs['data-lazy-img']
-		else:
-			com_info['img_url'] = 'http:' + img_attrs['src']
-		com_info['detail_url'] = 'https:' + com.find(class_='p-name').a.attrs['href'].replace('https://', '//')
-		com_info['website'] = '京东'
-		com_list.append(com_info)
+	com_list = resolve_jd(commodity_list)
 	if 0< len(com_list) < 30:
 		jd_page_count = jd_page_count - 1
 	return (com_list, jd_page_count)
@@ -161,3 +141,29 @@ def first_get_dd(keyword):
 		dd_page_count = dd_page_count - 1
 	return (commodity_info,dd_page_count)
 
+
+
+#解析京东页面的商品信息
+def resolve_jd(commodity_list):
+	com_list = []
+	for com in commodity_list:
+		com_info = {}
+		com_info['name'] = com.find(class_='p-name').a.em.get_text().strip()
+		com_info['price'] = com.find(class_='p-price').find(name='i').get_text()
+		try:
+			com_info['price'] = com.find(class_='p-price').strong.attrs['data-price']
+		except:
+			com_info['price'] = com.find(class_='p-price').find(name='i').get_text()
+		img_attrs = com.find(name='img', class_='err-product').attrs
+		if 'data-lazy-img' in img_attrs:
+			com_info['img_url'] = 'http:' + img_attrs['data-lazy-img']
+		else:
+			com_info['img_url'] = 'http:' + img_attrs['src']
+		com_info['detail_url'] = 'https:' + com.find(class_='p-name').a.attrs['href'].replace('https://', '//')
+		com_info['website'] = '京东'
+		com_list.append(com_info)
+	return com_list
+
+#价格从高到低
+def price_sort_down(keyword,page):
+	pass
