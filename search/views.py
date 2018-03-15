@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from .form import KeywordForm
+from .form import KeywordForm, SelectForm
 from django.utils import timezone
-from .crawler import get_all_com, first_get_com
+from .crawler import get_all_com, search_first, select_first, select_pages, resolve_page
 from django.http import HttpResponse
 
 #获取首页
@@ -14,6 +14,7 @@ def index(request):
 #根据关键词搜索商品
 def search_commodity(request):
 	user = request.GET.get('user', '')
+	select_form = SelectForm()
 	if request.method == 'POST':
 		form = KeywordForm(request.POST)
 
@@ -25,36 +26,32 @@ def search_commodity(request):
 			k.save()
 
 			#爬虫爬取商品
-			data = first_get_com(k.word)
-			com_list = data['com_list']
-			page_count = data['page_count']
-			jd_page_count = data['jd_page_count']
-			dd_page_count = data['dd_page_count']
+			data = search_first(k.word)
 			keyword = k.word
 			form_r = KeywordForm()
-			username = request.COOKIES.get('cookie_username', '')
-			current_page = 1
-			if page_count < 5:
-				page = [x for x in range(2, page_count+1)]
-			else:
-				page = [x for x in range(2,6)]
 			context={
-			'com_list':com_list, 
-			'form':form_r, 
-			'keyword': keyword, 
-			'current_page': current_page, 
-			'page':page,
-			'page_count': page_count,
-			'jd_page_count':jd_page_count,
-			'dd_page_count':dd_page_count
-			}
+				'com_list': data['com_list'], 
+				'form': form_r, 
+				'keyword': keyword, 
+				'current_page': data['current_page'], 
+				'befor_page': data['befor_page'],
+				'after_page': data['after_page'],
+				'page_count': data['page_count'],
+				'jd_page_count': data['jd_page_count'],
+				'dd_page_count': data['dd_page_count'],
+				'select_form': select_form,
+				'search_empty': data['search_empty'],
+				'website': data['website'],
+				'sort': data['sort'],
+				}
 			return render(request, 'search/search.html', context=context)
 	else:
 		return render(request, 'search/formerror.html')
 
 
-#翻页功能
+#全部网站综合排序翻页功能
 def search_page(request, keyword, page):
+	select_form = SelectForm()
 	page_count = int(request.GET.get('page_count', ''))
 	jd_page_count = int(request.GET.get('jd_page_count', ''))
 	dd_page_count = int(request.GET.get('dd_page_count', ''))
@@ -62,18 +59,7 @@ def search_page(request, keyword, page):
 	com_list = get_all_com(keyword, page, page_count, jd_page_count, dd_page_count)
 	form = KeywordForm()
 	current_page = page
-	if page_count < 5:
-		befor_page = [x for x in range(1, current_page)]
-		after_page = [x for x in range(current_page + 1, page_count + 1)]
-	elif page_count >5 and page_count - current_page < 2 :
-		befor_page = [x for x in range(current_page - (4 - (page_count - current_page)), current_page)]
-		after_page = [x for x in range(current_page + 1, page_count + 1)]
-	elif page_count >5 and current_page - 1 < 2:
-		befor_page = [x for x in range(1, current_page)]
-		after_page = [x for x in range(current_page + 1, current_page + (5 - (current_page - 1)))]
-	else:
-		befor_page = [x for x in range(current_page - 2, current_page)]
-		after_page = [x for x in range(current_page + 1, current_page + 3)]
+	befor_page,after_page = resolve_page(page, page_count)
 	if len(com_list) == 0:
 		search_empty = True
 	else:
@@ -89,5 +75,75 @@ def search_page(request, keyword, page):
 	'jd_page_count':jd_page_count,
 	'dd_page_count':dd_page_count,
 	'search_empty':search_empty,
+	'select_form':select_form,
+	'website': '1',
+	'sort': '1',
+	}
+	return render(request, 'search/search.html', context=context)
+
+#筛选商品（条件搜索）
+def select_commodity(request, keyword):
+	if request.method == 'POST':
+		select_form = SelectForm(request.POST, request.FILES)
+		form = KeywordForm()
+		if select_form.is_valid():
+			condition = select_form.clean()
+			#获取数据
+			data = select_first(keyword, condition['website'], condition['sort'])
+			if (condition['website'] == '1') & (condition['sort'] == '1'):
+				context={
+				'com_list': data['com_list'], 
+				'form': form, 
+				'keyword': keyword, 
+				'current_page': data['current_page'], 
+				'befor_page': data['befor_page'],
+				'after_page': data['after_page'],
+				'page_count': data['page_count'],
+				'jd_page_count': data['jd_page_count'],
+				'dd_page_count': data['dd_page_count'],
+				'select_form': select_form,
+				'search_empty': data['search_empty'],
+				'website': data['website'],
+				'sort': data['sort'],
+				}
+			else:
+				context={
+				'com_list': data['com_list'], 
+				'form': form, 
+				'keyword': keyword, 
+				'current_page': data['current_page'], 
+				'befor_page': data['befor_page'],
+				'after_page': data['after_page'],
+				'page_count': data['page_count'],
+				'select_form': select_form,
+				'search_empty': data['search_empty'],
+				'website': data['website'],
+				'sort': data['sort'],
+				}
+			return render(request, 'search/search.html', context=context)
+	else:
+		return render(request, 'search/formerror.html')
+
+
+#条件搜索的翻页
+def select_page(request, keyword, page):
+	form = KeywordForm()
+	website = request.GET.get('website', '')
+	sort = request.GET.get('sort', '')
+	page_count = int(request.GET.get('page_count',''))
+	select_form = SelectForm({'website': website, 'sort': sort})
+	data = select_pages(keyword, int(page), page_count, website, sort)
+	context={
+		'com_list': data['com_list'], 
+		'form': form, 
+		'keyword': keyword, 
+		'current_page': int(page), 
+		'befor_page': data['befor_page'],
+		'after_page': data['after_page'],
+		'page_count': page_count,
+		'select_form': select_form,
+		'search_empty': data['search_empty'],
+		'website': website,
+		'sort': sort,
 	}
 	return render(request, 'search/search.html', context=context)
