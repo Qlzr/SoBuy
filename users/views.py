@@ -4,9 +4,8 @@ from .models import User, Collention
 import pymysql
 from django.utils import timezone
 
-# Create your views here.
+#注册功能
 def register(request):
-
 	redirect_to = request.POST.get('next', request.GET.get('next', ''))
 	#只有当请求为POST时，才表示用户提交了注册信息
 	if request.method == 'POST':
@@ -29,6 +28,7 @@ def register(request):
 	#如果用户通过表单提交注册信息，但是数据验证不合法，则渲染的是一个带有错误信息的表单
 	return render(request, 'users/register.html', context={'form': form, 'next':redirect_to})
 
+#访问个人中心页面
 def personal(request):
 	return render(request, 'users/personal.html')
 

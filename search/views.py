@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from .form import KeywordForm, SelectForm
 from django.utils import timezone
 from .crawler import get_all_com, search_first, select_first, select_pages, resolve_page
@@ -56,30 +56,36 @@ def search_page(request, keyword, page):
 	jd_page_count = int(request.GET.get('jd_page_count', ''))
 	dd_page_count = int(request.GET.get('dd_page_count', ''))
 	page = int(page)
-	com_list = get_all_com(keyword, page, page_count, jd_page_count, dd_page_count)
+	data = get_all_com(keyword, page, page_count, jd_page_count, dd_page_count)
 	form = KeywordForm()
-	current_page = page
-	befor_page,after_page = resolve_page(page, page_count)
-	if len(com_list) == 0:
-		search_empty = True
-	else:
-		search_empty = False
 	context={
-	'com_list': com_list, 
+	'com_list': data['com_list'], 
 	'keyword': keyword, 
 	'form': form, 
-	'current_page': current_page,
-	'befor_page':befor_page,
-	'after_page':after_page,
+	'current_page': page,
+	'befor_page':data['befor_page'],
+	'after_page':data['after_page'],
 	'page_count': page_count,
 	'jd_page_count':jd_page_count,
 	'dd_page_count':dd_page_count,
-	'search_empty':search_empty,
+	'search_empty':data['search_empty'],
 	'select_form':select_form,
 	'website': '1',
 	'sort': '1',
 	}
 	return render(request, 'search/search.html', context=context)
+
+def jump_page1(request, keyword):
+	if request.method == "POST":
+		page_count = request.GET.get('page_count', '')
+		jd_page_count = request.GET.get('jd_page_count', '')
+		dd_page_count = request.GET.get('dd_page_count', '')
+		page = request.POST.get('page_text1', '1')
+		re_url = '/search/' + keyword + '/' + page + '/?page_count=' + page_count + '&jd_page_count=' + jd_page_count + '&dd_page_count=' + dd_page_count
+		return redirect(re_url)
+	else:
+		return render(request, 'search/formerror.html')
+
 
 #筛选商品（条件搜索）
 def select_commodity(request, keyword):
@@ -147,3 +153,14 @@ def select_page(request, keyword, page):
 		'sort': sort,
 	}
 	return render(request, 'search/search.html', context=context)
+
+def jump_page2(request, keyword):
+	if request.method == "POST":
+		website = request.GET.get('website', '')
+		sort = request.GET.get('sort', '')
+		page_count = request.GET.get('page_count','')
+		page = request.POST.get('page_text2', '1')
+		re_url = '/filter/' + keyword + '/' + page + '/?page_count=' + page_count + '&website=' + website + '&sort=' + sort
+		return redirect(re_url)
+	else:
+		return render(request, 'search/formerror.html')

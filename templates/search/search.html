@@ -167,6 +167,14 @@
 
 							
 								<li><a href="{% url 'search:search_page' keyword page_count %}?page_count={{ page_count }}&jd_page_count={{ jd_page_count }}&dd_page_count={{ dd_page_count }}">尾页</a></li>
+								<li><font>共{{ page_count }}页</font></li>
+								<li>
+									<form action="{% url 'search:jump_page1' keyword %}?page_count={{ page_count }}&jd_page_count={{ jd_page_count }}&dd_page_count={{ dd_page_count }}" method="post">
+										{% csrf_token %}
+										<input type="text" name="page_text1" size="3">页
+										<input type="submit" name="page_button1" value="跳转">
+									</form>
+								</li>
 							{% else %}
 								<li><a href="{% url 'search:select_page' keyword 1 %}?page_count={{ page_count }}&website={{ website }}&sort={{ sort }}">第一页</a></li>
 								{% for bp in befor_page %}
@@ -179,6 +187,13 @@
 									<li><a href="{% url 'search:select_page' keyword ap %}?page_count={{ page_count }}&website={{ website }}&sort={{ sort }}">{{ ap }}</a></li>
 								{% endfor %}
 								<li><a href="{% url 'search:select_page' keyword page_count %}?page_count={{ page_count }}&website={{ website }}&sort={{ sort }}">尾页</a></li>
+								<li><font>共{{ page_count }}页</font></li>
+								<li>
+									<form action="{% url 'search:jump_page2' keyword %}?page_count={{ page_count }}&website={{ website }}&sort={{ sort }}" method="post">
+										{% csrf_token %}
+										<input type="text" name="page_text2" size="3">页
+										<input type="submit" name="page_button2" value="跳转">
+									</form>
 							{% endif %}
 							</ul>
 

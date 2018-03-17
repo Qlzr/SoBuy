@@ -79,7 +79,18 @@ def get_all_com(keyword, page, page_count, jd_page_count, dd_page_count):
 		com_list_dd = get_dd(keyword, page)
 	com_list = com_list_jd + com_list_dd
 	random.shuffle(com_list)
-	return com_list
+	befor_page,after_page = resolve_page(page, page_count)
+	if len(com_list) == 0:
+		search_empty = True
+	else:
+		search_empty = False
+	data = {
+		'com_list':com_list,
+		'befor_page':befor_page,
+		'after_page':after_page,
+		'search_empty':search_empty,
+	}
+	return data
 
 #获取半页京东的商品信息
 def get_jd(keyword, page, sort=1):
@@ -242,23 +253,26 @@ def search_dd(keyword, page, sort):
 	page_count = int(soup.find(class_='data').find_all(name='span')[1].get_text()[1:])
 	commodity = soup.find(dd_name="普通商品区域").find_all(name='li')
 	com_list = resolve_dd(commodity)
-	if len(com_list) == 0:
-		search_empty = True
+	if sort ==1:
+		if len(com_list) == 0:
+			search_empty = True
+		else:
+			search_empty = False
+		current_page = page
+		befor_page, after_page = resolve_page(current_page, page_count)
+		data = {
+			'com_list': com_list,
+			'current_page': current_page,
+			'befor_page': befor_page,
+			'after_page': after_page,
+			'page_count': page_count,
+			'search_empty': search_empty,
+			'website': '3',
+			'sort': str(sort),
+		}
+		return data
 	else:
-		search_empty = False
-	current_page = 1
-	befor_page, after_page = resolve_page(current_page, page_count)
-	data = {
-		'com_list': com_list,
-		'current_page': current_page,
-		'befor_page': befor_page,
-		'after_page': after_page,
-		'page_count': page_count,
-		'search_empty': search_empty,
-		'website': '3',
-		'sort': str(sort),
-	}
-	return data
+		return com_list
 
 #首次条件搜索获取商品信息
 def select_first(keyword, website, sort):
