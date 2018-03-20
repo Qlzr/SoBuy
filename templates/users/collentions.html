@@ -65,10 +65,10 @@
 					<div class="am-u-sm-12 am-u-md-12">
 						<div class="search-content">
 							<div class="sort">
-								<li class="first"><a title="个人资料" href="{% url 'users:personal' %}">个人资料</a></li>
+								<li><a title="个人资料" href="{% url 'users:personal' %}">个人资料</a></li>
 
                                 {% if user.is_authenticated %}
-                                <li><a title="收藏夹" href="{% url 'users:collentions' user.username %}">收藏夹</a></li>
+                                <li class="first"><a title="收藏夹" href="{% url 'users:collentions' user.username %}">收藏夹</a></li>
                                 <li><a title="修改密码" href="{% url 'password_change' %}">修改密码</a></li>
 
                                 {% else %}
