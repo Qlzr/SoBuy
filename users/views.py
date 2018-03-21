@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import RegisterForm, UserForm
 from .models import User, Collention
-import pymysql
 from django.utils import timezone
 
 #注册功能

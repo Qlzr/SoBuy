@@ -9,7 +9,6 @@
 		<title>搜索页面</title>
 
 		<link href="{% static 'search/css/amazeui.css' %}" rel="stylesheet" type="text/css" />
-		<link href="{% static 'search/css/admin.css' %}" rel="stylesheet" type="text/css" />
 		<link href="{% static 'search/css/demo.css' %}" rel="stylesheet" type="text/css" />
 		<link href="{% static 'search/css/seastyle.css' %}" rel="stylesheet" type="text/css" />
 		<style>
@@ -79,9 +78,11 @@
 					{% csrf_token %}
 						{{ form.word }}
 						{{ form.word.errors }}
-				<input id="ai-topsearch" class="submit am-btn"  value="搜索" index="1" type="submit">
-			</form>
-					
+						<input id="ai-topsearch" class="submit am-btn"  value="搜索" type="submit">
+					</form>
+					<script>
+						document.getElementById('id_word').placeholder="请输入要搜索的商品";
+					</script>
 				</div>
 			</div>
 
